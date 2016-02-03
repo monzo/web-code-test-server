@@ -7,6 +7,13 @@ app.use(require("morgan")("combined"));
 
 var jwtSecret = "mondo is the best";
 
+app.get("/robots.txt", function(req, res) {
+  res.send("User-agent: *\nDisallow: /");
+});
+
+app.get("/ping", function(req, res) {
+  res.send("Hullo");
+});
 
 // POST /login with JSON-encoded body {"email": "...", "password": "..."}
 //  - returns 204 and JSON-encoded error if the password isn't hunter2
@@ -79,10 +86,6 @@ app.get("/", function(req, res) {
     "message": "The API is alive and your access token is valid :)",
     "token": req.token
   });
-});
-
-app.get("/ping", function(req, res) {
-  res.send("Hullo");
 });
 
 // We clean up data that hasn't been accessed in the last hour every minute or so
