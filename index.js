@@ -33,7 +33,7 @@ app.post("/login", function (req, res, next) {
     accessToken: jwt.sign({
       email: req.body["email"]
     }, jwtSecret, {
-      expiresIn: req.body["expiry"] || "60s"
+      expiresIn: req.body["expiry"] || "30m"
     })
   })
 });
