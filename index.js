@@ -4,6 +4,7 @@ var app = express();
 var jwt = require("jsonwebtoken");
 app.use(require("body-parser").json());
 app.use(require("morgan")("combined"));
+app.set("json spaces", 4);
 
 var jwtSecret = "mondo is the best";
 
@@ -16,7 +17,7 @@ app.get("/ping", function(req, res) {
 });
 
 // POST /login with JSON-encoded body {"email": "...", "password": "..."}
-//  - returns 204 and JSON-encoded error if the password isn't hunter2
+//  - returns 401 and JSON-encoded error if the password isn't hunter2
 //  - returns 200 and {"token": "..."} otherwise. This token can be used in subsequent requests
 //    in the Authorization header to authenticate
 app.post("/login", function (req, res, next) {
@@ -28,13 +29,11 @@ app.post("/login", function (req, res, next) {
   // init a database for this user if there isn't one already
   db.initUser(req.body["email"]);
 
-  // Cruft up a new access token, which is really just a stringified date that
-  // encodes the access token's expiration date
   res.json({
     accessToken: jwt.sign({
       email: req.body["email"]
     }, jwtSecret, {
-      expiresIn: "30m"
+      expiresIn: "60s"
     })
   })
 });
@@ -88,7 +87,8 @@ app.get("/", function(req, res) {
   });
 });
 
-// We clean up data that hasn't been accessed in the last hour every minute or so
+// We clean up data that hasn't been accessed in the last hour every minute or so to prevent
+// applicants from (accidentally) nuking our dyno
 setInterval(function(){
   db.reap(new Date(Date.now() - 60 * 60 * 1000));
 }, 60 * 1000);
