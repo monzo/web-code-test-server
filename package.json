@@ -1,0 +1,26 @@
+{
+  "name": "web-code-test-server",
+  "version": "1.0.0",
+  "description": "Server for web frontent code test",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mondough/web-code-test-server.git"
+  },
+  "author": "Jonas Huckestein",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mondough/web-code-test-server/issues"
+  },
+  "homepage": "https://github.com/mondough/web-code-test-server#readme",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "express": "^4.13.4",
+    "faker": "^3.0.1",
+    "jsonwebtoken": "^5.5.4",
+    "morgan": "^1.6.1"
+  }
+}
