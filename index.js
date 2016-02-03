@@ -59,23 +59,23 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.get("/oAuthClients", function(req, res) {
+app.get("/apps", function(req, res) {
   res.json({
-    oAuthClients: db.getClients(req.token.email)
+    Apps: db.getApps(req.token.email)
   });
 });
 
-app.get("/oAuthClients/:clientId/users", function(req, res) {
-  var limit = parseInt(req.query.limit) || 25,
+app.get("/apps/:appId/users", function(req, res) {
+  var limit = Math.min(parseInt(req.query.limit) || 25, 25),
       offset = parseInt(req.query.offset) || 0;
   res.json({
-    users: db.getUsers(req.token.email, req.params.clientId).slice(offset, offset+limit)
+    users: db.getUsers(req.token.email, req.params.appId).slice(offset, offset+limit)
   });
 });
 
-app.put("/oAuthClients/:clientId", function(req, res) {
+app.put("/apps/:appId", function(req, res) {
   res.json({
-    client: db.updateClient(req.token.email, req.params.clientId, req.body)
+    app: db.updateApp(req.token.email, req.params.appId, req.body)
   });
 });
 

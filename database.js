@@ -2,25 +2,25 @@ var faker = require("faker");
 
 var dbs = {};
 
-var _getClientsForUser = function(userId) {
+var _getAppsForUser = function(userId) {
   if(!dbs[userId]) { return []; }
   dbs[userId].accessed = new Date();
-  return dbs[userId].oAuthClients;
+  return dbs[userId].Apps;
 };
 
-var _getClientForUser = function(userId, clientId) {
-  return _getClientsForUser(userId).filter(function(c){
-    return c.id === clientId;
+var _getAppForUser = function(userId, appId) {
+  return _getAppsForUser(userId).filter(function(a){
+    return a.id === appId;
   })[0];
 };
 
-// Removes the `users` key from a client
-var _stripClient = function(c) {
+// Removes the `users` key from a app
+var _stripApp = function(a) {
   return {
-    id: c.id,
-    name: c.name,
-    created: c.created,
-    logo: c.logo
+    id: a.id,
+    name: a.name,
+    created: a.created,
+    logo: a.logo
   };
 };
 
@@ -34,24 +34,23 @@ var initUser = function(userId) {
   dbs[userId] = {
     created: new Date(),
     accessed: new Date(),
-    oAuthClients: []
+    Apps: []
   };
-  var numClients = _random(2,5);
-  for(var i=0; i<numClients; i++) {
+  var numApps = _random(2,5);
+  for(var i=0; i<numApps; i++) {
     // generate some users
-    var client = {
+    var app = {
       id: faker.random.uuid(),
       name: faker.commerce.productName(),
-      description: faker.lorem.sentence(),
       logo: faker.image.imageUrl(400, 400, "animals"),
       created: faker.date.past(),
       users: [],
     };
-    dbs[userId].oAuthClients.push(client);
+    dbs[userId].Apps.push(app);
 
     var numUsers = _random(55,200);
     for(var j=0; j<numUsers; j++) {
-      client.users.push({
+      app.users.push({
         id: faker.random.uuid(),
         name: faker.name.findName(),
         email: faker.internet.email(),
@@ -62,27 +61,27 @@ var initUser = function(userId) {
   return true;
 };
 
-var getClients = function(userId) {
-  return _getClientsForUser(userId).map(function(c){
-    return _stripClient(c);
+var getApps = function(userId) {
+  return _getAppsForUser(userId).map(function(c){
+    return _stripApp(c);
   });
 };
 
-// Returns an array of all users for a given client
-var getUsers = function(userId, clientId) {
-  var client = _getClientForUser(userId, clientId);
-  if(!client) return [];
-  return client.users;
+// Returns an array of all users for a given app
+var getUsers = function(userId, appId) {
+  var app = _getAppForUser(userId, appId);
+  if(!app) return [];
+  return app.users;
 };
 
-// Updates a client
-var updateClient = function(userId, clientId, updates) {
-  var client = _getClientForUser(userId, clientId);
-  if(!client) return null;
+// Updates a app
+var updateApp = function(userId, appId, updates) {
+  var app = _getAppForUser(userId, appId);
+  if(!app) return null;
   Object.keys(updates).forEach(function(key) {
-    if(key != "users" && key != "created") client[key] = updates[key];
+    if(key != "users" && key != "created") app[key] = updates[key];
   });
-  return _stripClient(client);
+  return _stripApp(app);
 }
 
 // Erases all databases that haven't been used after cutoff
@@ -103,8 +102,8 @@ var dump = function() {
 module.exports = {
   dump: dump,
   reap: reap,
-  getClients: getClients,
+  getApps: getApps,
   initUser: initUser,
   getUsers: getUsers,
-  updateClient: updateClient
+  updateApp: updateApp
 };
