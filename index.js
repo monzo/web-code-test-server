@@ -61,7 +61,7 @@ app.use(function(req, res, next) {
 
 app.get("/apps", function(req, res) {
   res.json({
-    Apps: db.getApps(req.token.email)
+    apps: db.getApps(req.token.email)
   });
 });
 
