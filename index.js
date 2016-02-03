@@ -81,6 +81,10 @@ app.get("/", function(req, res) {
   });
 });
 
+app.get("/ping", function(req, res) {
+  res.send("Hullo");
+});
+
 // We clean up data that hasn't been accessed in the last hour every minute or so
 setInterval(function(){
   db.reap(new Date(Date.now() - 60 * 60 * 1000));
