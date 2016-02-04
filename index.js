@@ -8,6 +8,12 @@ app.set("json spaces", 4);
 
 var jwtSecret = "mondo is the best";
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 app.get("/robots.txt", function(req, res) {
   res.send("User-agent: *\nDisallow: /");
 });
